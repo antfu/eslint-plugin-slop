@@ -56,6 +56,10 @@ export const preferJsdoc = defineRule({
     },
   },
   create(context) {
+    // Skip code snippets in markdown and other virtual files
+    if (context.filename !== context.physicalFilename)
+      return {}
+
     const source = context.sourceCode
     const text = source.text
 

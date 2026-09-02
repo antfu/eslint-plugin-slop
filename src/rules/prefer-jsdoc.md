@@ -18,6 +18,8 @@ A blank line between the comment and the target does not break the association; 
 
 Two comments are never converted: license and copyright headers (`Copyright`, `License`, `SPDX`, `©`), and a file header separated from the export by a blank line, because it describes the module rather than the export below it. Directive comments (`eslint`, `ts-`, and the like) are left alone.
 
+The rule is skipped entirely for code blocks extracted from another file type, such as a fenced code snippet inside a Markdown file processed by `@eslint/markdown` — the snippet isn't a real module whose exports get hovered in an editor.
+
 ```ts
 // bad
 // Parses the config file

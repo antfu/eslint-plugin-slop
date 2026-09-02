@@ -1,6 +1,9 @@
 import type { Linter as LinterTypes } from 'eslint'
+import markdown from '@eslint/markdown'
 import tsParser from '@typescript-eslint/parser'
+import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import plugin from '../plugin'
 import { lint, lintFix } from './test-utils'
 
 describe('prefer-jsdoc', () => {
@@ -55,5 +58,24 @@ describe('prefer-jsdoc', () => {
   it('ignores destructuring properties and non-exported declarations', () => {
     expect(lint('prefer-jsdoc', '// note\nconst { a } = obj')).toHaveLength(0)
     expect(lint('prefer-jsdoc', '// note\nconst a = 1')).toHaveLength(0)
+  })
+
+  it('skips code blocks extracted from a Markdown file', () => {
+    const linter = new Linter({ configType: 'flat' })
+    const code = '# Docs\n\n```js\n// Parses the config file\nexport function parseConfig(path) {}\n```\n'
+    const messages = linter.verify(code, [
+      {
+        files: ['**/*.md'],
+        plugins: { markdown },
+        processor: 'markdown/markdown',
+      },
+      {
+        files: ['**/*.md/*.js'],
+        plugins: { slop: plugin },
+        rules: { 'slop/prefer-jsdoc': 'error' },
+      },
+    ], 'README.md')
+
+    expect(messages).toHaveLength(0)
   })
 })
