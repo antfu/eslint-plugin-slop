@@ -4,8 +4,12 @@
 // #region Interfaces
 export interface SlopConfigOptions {
   cwd?: string;
-  inspection?: SlopInspection;
+  inspection?: SlopInspectionOption;
   rules?: Partial<Record<SlopRuleId, Linter.RuleEntry>>;
+}
+export interface SlopOverrides {
+  cwd?: string;
+  inspection?: SlopInspectionOption;
 }
 export interface SlopSettings {
   cwd: string;
@@ -22,6 +26,8 @@ export type SlopInspection = {
   mode: 'recent-changes';
   tracebackCommits?: number;
 };
+export type SlopInspectionMode = 'full' | 'uncommitted' | 'recent-changes';
+export type SlopInspectionOption = SlopInspectionMode | SlopInspection;
 export type SlopRuleId = `slop/${SlopRuleName}`;
 export type SlopRuleName = 'max-comment-length' | 'no-chained-type-assertions' | 'no-em-dash' | 'no-jargon' | 'no-trivial-functions' | 'no-trivial-type-aliases' | 'prefer-jsdoc';
 // #endregion

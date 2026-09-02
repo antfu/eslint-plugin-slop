@@ -1,8 +1,9 @@
 import type { Linter } from 'eslint'
-import type { SlopConfigOptions, SlopInspection, SlopRuleId, SlopSettings } from './types'
+import type { SlopConfigOptions, SlopRuleId, SlopSettings } from './types'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import plugin from './plugin'
+import { normalizeInspection } from './utils/inspection'
 
 const universalRuleIds = ['slop/no-em-dash'] as const satisfies readonly SlopRuleId[]
 const javascriptRuleIds = [
@@ -22,19 +23,6 @@ const defaultRules: Record<SlopRuleId, Linter.RuleEntry> = {
   'slop/no-trivial-functions': 'error',
   'slop/no-trivial-type-aliases': 'error',
   'slop/prefer-jsdoc': 'error',
-}
-
-function normalizeInspection(inspection: SlopInspection | undefined): SlopInspection {
-  if (!inspection)
-    return { mode: 'recent-changes', tracebackCommits: 5 }
-  if (inspection.mode !== 'recent-changes')
-    return inspection
-
-  const tracebackCommits = inspection.tracebackCommits ?? 5
-  if (!Number.isInteger(tracebackCommits) || tracebackCommits < 1)
-    throw new TypeError('inspection.tracebackCommits must be a positive integer.')
-
-  return { mode: 'recent-changes', tracebackCommits }
 }
 
 function selectRules(

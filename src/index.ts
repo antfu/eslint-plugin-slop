@@ -5,6 +5,9 @@ export { defaultJargonWords } from './rules/no-jargon'
 export type {
   SlopConfigOptions,
   SlopInspection,
+  SlopInspectionMode,
+  SlopInspectionOption,
+  SlopOverrides,
   SlopRuleId,
   SlopRuleName,
   SlopSettings,

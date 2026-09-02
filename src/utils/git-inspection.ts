@@ -1,9 +1,10 @@
 import type { Rule } from 'eslint'
-import type { SlopInspection, SlopSettings } from '../types'
+import type { SlopInspection, SlopOverrides, SlopSettings } from '../types'
 import { execFileSync } from 'node:child_process'
 import { realpathSync } from 'node:fs'
 import { basename, dirname, isAbsolute, relative, resolve, sep } from 'node:path'
 import { diffArrays } from 'diff'
+import { normalizeInspection } from './inspection'
 
 interface SourceCodeLike {
   text: string
@@ -13,8 +14,14 @@ interface ContextLike {
   cwd: string
   filename: string
   physicalFilename: string
+  options: unknown[]
   settings: Record<string, unknown>
   sourceCode: SourceCodeLike
+}
+
+interface ResolvedInspection {
+  cwd: string
+  inspection: SlopInspection
 }
 
 interface LocationLike {
@@ -24,7 +31,7 @@ interface LocationLike {
   } | null
 }
 
-const changedLinesCache = new WeakMap<object, Set<number> | null>()
+const changedLinesCache = new WeakMap<object, Map<string, Set<number> | null>>()
 const gitRootCache = new Map<string, string | null>()
 const baselineCache = new Map<string, string>()
 
@@ -57,6 +64,27 @@ function getSettings(context: ContextLike): SlopSettings | null {
     return null
 
   return candidate as SlopSettings
+}
+
+/** Merge per-rule overrides over the shared settings; null means full inspection. */
+function resolveInspection(context: ContextLike): ResolvedInspection | null {
+  const overrides = context.options[0] as SlopOverrides | undefined
+  const settings = getSettings(context)
+
+  const inspectionInput = overrides?.inspection ?? settings?.inspection
+  if (!inspectionInput)
+    return null
+
+  const inspection = normalizeInspection(inspectionInput)
+  if (inspection.mode === 'full')
+    return null
+
+  return { cwd: overrides?.cwd ?? settings?.cwd ?? context.cwd, inspection }
+}
+
+function inspectionKey({ cwd, inspection }: ResolvedInspection): string {
+  const traceback = inspection.mode === 'recent-changes' ? inspection.tracebackCommits : ''
+  return `${cwd}\0${inspection.mode}\0${traceback}`
 }
 
 function getBaselineRevision(root: string, inspection: SlopInspection): string | null {
@@ -129,27 +157,32 @@ function resolveLintedFile(context: ContextLike, root: string): string | null {
 }
 
 function getChangedLines(context: ContextLike): Set<number> | null {
-  const cached = changedLinesCache.get(context.sourceCode)
+  const resolved = resolveInspection(context)
+  if (!resolved)
+    return null
+
+  let perSource = changedLinesCache.get(context.sourceCode)
+  if (!perSource) {
+    perSource = new Map()
+    changedLinesCache.set(context.sourceCode, perSource)
+  }
+
+  const key = inspectionKey(resolved)
+  const cached = perSource.get(key)
   if (cached !== undefined)
     return cached
 
-  const settings = getSettings(context)
-  if (!settings || settings.inspection.mode === 'full') {
-    changedLinesCache.set(context.sourceCode, null)
-    return null
-  }
-
-  const root = getGitRoot(settings.cwd)
+  const root = getGitRoot(resolved.cwd)
   const relativeFilename = root && resolveLintedFile(context, root)
   if (!root || !relativeFilename) {
-    changedLinesCache.set(context.sourceCode, null)
+    perSource.set(key, null)
     return null
   }
 
-  const baselineRevision = getBaselineRevision(root, settings.inspection)
+  const baselineRevision = getBaselineRevision(root, resolved.inspection)
   const baseline = getBaselineText(root, baselineRevision, relativeFilename)
   const lines = findChangedLines(baseline, context.sourceCode.text)
-  changedLinesCache.set(context.sourceCode, lines)
+  perSource.set(key, lines)
   return lines
 }
 

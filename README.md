@@ -40,7 +40,24 @@ createSlopConfig({
 - `uncommitted` compares the exact linted text with `HEAD`. It includes staged, unstaged, untracked, and unsaved changes.
 - `full` inspects the complete file.
 
+A bare mode string is shorthand for `{ mode }`, so `inspection: 'full'` equals `inspection: { mode: 'full' }`.
+
 Recent modes report a construct only when its current range intersects an added or modified line in the net diff. If Git is unavailable, the file sits outside the repository, or the requested history is unavailable, the rules inspect the complete file.
+
+### Per-rule overrides
+
+Every rule accepts the global props (`cwd`, `inspection`) in its own options entry, overriding the shared config for that rule alone. The shorthand works here too.
+
+```ts
+createSlopConfig({
+  inspection: 'recent-changes',
+  rules: {
+    // Always scan the whole file for em dashes, ignoring the global inspection.
+    'slop/no-em-dash': ['error', { inspection: 'full' }],
+    'slop/max-comment-length': ['error', { maximumWords: 40, inspection: 'uncommitted' }],
+  },
+})
+```
 
 ### Rule overrides
 
