@@ -1,5 +1,5 @@
 import type { Linter as LinterTypes } from 'eslint'
-import type { SlopInspection } from '../src'
+import type { SlopInspectionOption } from '../src'
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -38,7 +38,7 @@ function lintWithConfig(
   content: string,
   file: string,
   cwd: string,
-  inspection?: SlopInspection,
+  inspection?: SlopInspectionOption,
 ): LinterTypes.LintMessage[] {
   const linter = new Linter({ configType: 'flat', cwd })
   return linter.verify(content, createSlopConfig({ cwd, inspection }), file)
@@ -83,6 +83,14 @@ describe('createSlopConfig', () => {
     expect(() => createSlopConfig({
       inspection: { mode: 'recent-changes', tracebackCommits: 0 },
     })).toThrow('positive integer')
+  })
+
+  it('accepts a bare mode string as inspection shorthand', () => {
+    const [universal] = createSlopConfig({ cwd: '/workspace', inspection: 'full' })
+
+    expect(universal.settings).toEqual({
+      slop: { cwd: '/workspace', inspection: { mode: 'full' } },
+    })
   })
 
   it('exposes rules without bundled configs on the raw plugin', () => {
@@ -154,6 +162,21 @@ describe('git-aware inspection', () => {
       mode: 'recent-changes',
       tracebackCommits: 5,
     })).toHaveLength(1)
+  })
+
+  it('lets a rule override the global inspection with its own options', () => {
+    const baseline = 'const oldText = "old \u2014 prose"\nconst clean = true\n'
+    const { directory, file } = createRepository(baseline)
+    const current = 'const oldText = "old \u2014 prose"\nconst clean = "new \u2014 prose"\n'
+    const linter = new Linter({ configType: 'flat', cwd: directory })
+
+    const messages = linter.verify(current, createSlopConfig({
+      cwd: directory,
+      inspection: 'uncommitted',
+      rules: { 'slop/no-em-dash': ['error', { inspection: 'full' }] },
+    }), file)
+
+    expect(messages.map(message => message.line)).toEqual([1, 2])
   })
 
   it('falls back to full inspection outside a Git repository', () => {
