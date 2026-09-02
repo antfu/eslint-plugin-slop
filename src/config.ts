@@ -8,16 +8,20 @@ const universalRuleIds = ['slop/no-em-dash'] as const satisfies readonly SlopRul
 const javascriptRuleIds = [
   'slop/max-comment-length',
   'slop/no-chained-type-assertions',
+  'slop/no-jargon',
   'slop/no-trivial-functions',
   'slop/no-trivial-type-aliases',
+  'slop/prefer-jsdoc',
 ] as const satisfies readonly SlopRuleId[]
 
 const defaultRules: Record<SlopRuleId, Linter.RuleEntry> = {
   'slop/max-comment-length': 'error',
   'slop/no-chained-type-assertions': 'error',
   'slop/no-em-dash': 'error',
+  'slop/no-jargon': 'error',
   'slop/no-trivial-functions': 'error',
   'slop/no-trivial-type-aliases': 'error',
+  'slop/prefer-jsdoc': 'error',
 }
 
 function normalizeInspection(inspection: SlopInspection | undefined): SlopInspection {

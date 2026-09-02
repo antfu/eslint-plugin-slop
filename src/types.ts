@@ -9,8 +9,10 @@ export type SlopRuleName
   = | 'max-comment-length'
     | 'no-chained-type-assertions'
     | 'no-em-dash'
+    | 'no-jargon'
     | 'no-trivial-functions'
     | 'no-trivial-type-aliases'
+    | 'prefer-jsdoc'
 
 export type SlopRuleId = `slop/${SlopRuleName}`
 

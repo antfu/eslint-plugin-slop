@@ -65,6 +65,8 @@ The default export is the raw ESLint plugin object. It has `meta` and `rules`, w
 | [`slop/no-em-dash`](./src/rules/no-em-dash.md) | Each literal U+2014 character in any parser-compatible language | None |
 | [`slop/no-trivial-functions`](./src/rules/no-trivial-functions.md) | Low-use top-level property access or transparent forwarding functions that are not exported through ESM | `minimumReferences`, default `5` |
 | [`slop/max-comment-length`](./src/rules/max-comment-length.md) | Logical comment blocks over a word limit | `maximumWords`, default `50`; `ignoreJSDoc`, default `true` |
+| [`slop/no-jargon`](./src/rules/no-jargon.md) | Inflated vocabulary in comments, with editor suggestions where a clean swap exists | `words`; `extraWords`; `allow`; `ignoreJSDoc`, default `false` |
+| [`slop/prefer-jsdoc`](./src/rules/prefer-jsdoc.md) | A `//` comment documenting an export or member, autofixed to `/** */` | None |
 | [`slop/no-trivial-type-aliases`](./src/rules/no-trivial-type-aliases.md) | Top-level TypeScript aliases that resolve through same-file chains to `unknown` or a primitive | None |
 | [`slop/no-chained-type-assertions`](./src/rules/no-chained-type-assertions.md) | Two or more nested TypeScript assertions, except chains made entirely of `as const` | None |
 
@@ -72,12 +74,17 @@ The default export is the raw ESLint plugin object. It has `meta` and `rules`, w
 
 `no-trivial-functions` counts external value references. It excludes the declaration, recursive references inside the function, and type-only references. Direct and later ESM exports remain allowed.
 
+`no-jargon` matches simple inflections, so `utilizes` and `delving` are caught. A word inside backticks or double quotes never fires. The default word list is exported as `defaultJargonWords`.
+
+`prefer-jsdoc` fires on a `//` run directly above an export or a member (interface and type-literal members, object properties, class members, enum members). A blank line does not break the association; code or a block comment does. License headers and directive comments are left alone.
+
 ## Credits
 
 The rule selection and package organization draw from these projects.
 
 - [dmmulroy/anti-slop](https://github.com/dmmulroy/anti-slop) cataloged recurring low-value patterns.
 - [Coderrob/eslint-config-zero-tolerance](https://github.com/Coderrob/eslint-config-zero-tolerance) showed the value of a small strict rule set.
+- [jantimon/eslint-plugin-no-comment-slop](https://github.com/jantimon/eslint-plugin-no-comment-slop) inspired `no-jargon` and `prefer-jsdoc`, including the default jargon list and the license-header and directive exclusions.
 
 The rule implementations here are original and follow the narrower behavior documented above.
 
