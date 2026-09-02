@@ -6,6 +6,7 @@ export function createSlopConfig(_) {}
 // #endregion
 
 // #region Variables
+export var defaultJargonWords /* const */
 export var rules /* const */
 // #endregion
 

@@ -60,8 +60,10 @@ describe('createSlopConfig', () => {
     expect(javascript.rules).toEqual({
       'slop/max-comment-length': 'error',
       'slop/no-chained-type-assertions': 'error',
+      'slop/no-jargon': 'error',
       'slop/no-trivial-functions': 'error',
       'slop/no-trivial-type-aliases': 'error',
+      'slop/prefer-jsdoc': 'error',
     })
     expect(universal.settings).toEqual({
       slop: {

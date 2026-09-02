@@ -17,6 +17,8 @@ export default antfu(
       'slop/no-em-dash': 'off',
       'slop/no-chained-type-assertions': 'off',
       'slop/no-trivial-functions': 'off',
+      'slop/no-jargon': 'off',
+      'slop/prefer-jsdoc': 'off',
     },
   },
 )

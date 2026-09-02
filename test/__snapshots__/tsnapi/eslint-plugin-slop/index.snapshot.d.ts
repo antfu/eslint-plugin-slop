@@ -23,7 +23,7 @@ export type SlopInspection = {
   tracebackCommits?: number;
 };
 export type SlopRuleId = `slop/${SlopRuleName}`;
-export type SlopRuleName = 'max-comment-length' | 'no-chained-type-assertions' | 'no-em-dash' | 'no-trivial-functions' | 'no-trivial-type-aliases';
+export type SlopRuleName = 'max-comment-length' | 'no-chained-type-assertions' | 'no-em-dash' | 'no-jargon' | 'no-trivial-functions' | 'no-trivial-type-aliases' | 'prefer-jsdoc';
 // #endregion
 
 // #region Functions
@@ -31,12 +31,15 @@ export declare function createSlopConfig(_?: SlopConfigOptions): Linter.Config[]
 // #endregion
 
 // #region Variables
+export declare const defaultJargonWords: readonly ["utilize", "utilise", "leverage", "delve", "facilitate", "streamline", "seamless", "seamlessly", "robust", "comprehensive", "meticulous", "meticulously", "crucial", "pivotal", "myriad", "plethora"];
 export declare const rules: {
   'max-comment-length': import("eslint").Rule.RuleModule;
   'no-chained-type-assertions': import("eslint").Rule.RuleModule;
   'no-em-dash': import("eslint").Rule.RuleModule;
+  'no-jargon': import("eslint").Rule.RuleModule;
   'no-trivial-functions': import("eslint").Rule.RuleModule;
   'no-trivial-type-aliases': import("eslint").Rule.RuleModule;
+  'prefer-jsdoc': import("eslint").Rule.RuleModule;
 };
 // #endregion
 
