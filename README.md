@@ -85,6 +85,7 @@ The default export is the raw ESLint plugin object. It has `meta` and `rules`, w
 | [`slop/no-jargon`](./src/rules/no-jargon.md) | Inflated vocabulary in comments, with editor suggestions where a clean swap exists | `words`; `extraWords`; `allow`; `ignoreJSDoc`, default `false` |
 | [`slop/prefer-jsdoc`](./src/rules/prefer-jsdoc.md) | A `//` comment documenting an export or member, autofixed to `/** */` | None |
 | [`slop/no-trivial-type-aliases`](./src/rules/no-trivial-type-aliases.md) | Top-level TypeScript aliases that resolve through same-file chains to `unknown` or a primitive | None |
+| [`slop/no-static-only-class`](./src/rules/no-static-only-class.md) | Classes that group only static members and act as namespaces instead of abstractions | None |
 | [`slop/no-chained-type-assertions`](./src/rules/no-chained-type-assertions.md) | Two or more nested TypeScript assertions, except chains made entirely of `as const` | None |
 
 `max-comment-length` groups directly adjacent line comments. A blank line or code separates groups. The first comment block before the first code token is a file header. A shebang may come before it.
@@ -94,6 +95,8 @@ The default export is the raw ESLint plugin object. It has `meta` and `rules`, w
 `no-jargon` matches simple inflections, so `utilizes` and `delving` are caught. A word inside backticks or double quotes never fires. The default word list is exported as `defaultJargonWords`.
 
 `prefer-jsdoc` fires on a `//` run directly above an export or a member (interface and type-literal members, object properties, class members, enum members). A blank line does not break the association; code or a block comment does. License headers and directive comments are left alone.
+
+`no-static-only-class` reports a class when every member is `static`, ignoring an empty boilerplate constructor. Classes with a superclass, `implements`, decorators, an `abstract` or `declare` modifier, a static block, or any instance member stay allowed.
 
 ## Credits
 
