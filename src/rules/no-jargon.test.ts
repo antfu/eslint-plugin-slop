@@ -14,6 +14,10 @@ describe('no-jargon', () => {
       ])
   })
 
+  it('matches ies and ally inflections', () => {
+    expect(lint('no-jargon', '// synergies handled holistically')).toHaveLength(2)
+  })
+
   it('offers a replacement suggestion only where a clean swap exists', () => {
     const code = '// utilize the robust value'
     const [utilize, robust] = lint('no-jargon', code)
@@ -28,7 +32,7 @@ describe('no-jargon', () => {
 
   it('respects allow, extraWords, and ignoreJSDoc', () => {
     expect(lint('no-jargon', '// utilize this', [{ allow: ['utilize'] }])).toHaveLength(0)
-    expect(lint('no-jargon', '// synergy here', [{ extraWords: ['synergy'] }])).toHaveLength(1)
+    expect(lint('no-jargon', '// blazingly fast', [{ extraWords: ['blazingly'] }])).toHaveLength(1)
     expect(lint('no-jargon', '/** utilize this */', [{ ignoreJSDoc: true }])).toHaveLength(0)
     expect(lint('no-jargon', '/** utilize this */')).toHaveLength(1)
   })

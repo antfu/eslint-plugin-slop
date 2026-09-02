@@ -25,6 +25,17 @@ export const defaultJargonWords = [
   'pivotal',
   'myriad',
   'plethora',
+  'paramount',
+  'holistic',
+  'multifaceted',
+  'nuanced',
+  'synergy',
+  'bolster',
+  'encompass',
+  'endeavor',
+  'endeavour',
+  'aforementioned',
+  'commence',
 ] as const
 
 const swaps: Record<string, string> = {
@@ -35,6 +46,9 @@ const swaps: Record<string, string> = {
   streamline: 'simplify',
   comprehensive: 'complete',
   crucial: 'important',
+  paramount: 'important',
+  encompass: 'include',
+  commence: 'start',
 }
 
 function getPosition(text: string, index: number): { column: number, line: number } {
@@ -49,9 +63,11 @@ function escape(word: string): string {
 
 function toPattern(word: string): string {
   const base = escape(word)
-  const parts = [`${base}(?:s|es|d|ed|ing|ly)?`]
+  const parts = [`${base}(?:s|es|d|ed|ing|ly|ally)?`]
   if (word.endsWith('e'))
     parts.push(`${escape(word.slice(0, -1))}(?:ing|ed|es)`)
+  if (word.endsWith('y'))
+    parts.push(`${escape(word.slice(0, -1))}ies`)
   return parts.join('|')
 }
 

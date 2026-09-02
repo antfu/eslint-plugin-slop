@@ -31,7 +31,7 @@ export declare function createSlopConfig(_?: SlopConfigOptions): Linter.Config[]
 // #endregion
 
 // #region Variables
-export declare const defaultJargonWords: readonly ["utilize", "utilise", "leverage", "delve", "facilitate", "streamline", "seamless", "seamlessly", "robust", "comprehensive", "meticulous", "meticulously", "crucial", "pivotal", "myriad", "plethora"];
+export declare const defaultJargonWords: readonly ["utilize", "utilise", "leverage", "delve", "facilitate", "streamline", "seamless", "seamlessly", "robust", "comprehensive", "meticulous", "meticulously", "crucial", "pivotal", "myriad", "plethora", "paramount", "holistic", "multifaceted", "nuanced", "synergy", "bolster", "encompass", "endeavor", "endeavour", "aforementioned", "commence"];
 export declare const rules: {
   'max-comment-length': import("eslint").Rule.RuleModule;
   'no-chained-type-assertions': import("eslint").Rule.RuleModule;
