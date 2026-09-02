@@ -6,15 +6,80 @@
 [![JSDocs][jsdocs-src]][jsdocs-href]
 [![License][license-src]][license-href]
 
-ESLint plugin for catching potential AI slops and force the feedback loop
+ESLint rules for guarding AI slops in code.
 
-## Note for Developers
+## Usage
 
-This starter recommands using [npm Trusted Publisher](https://github.com/e18e/ecosystem-issues/issues/201), where the release is done on CI to ensure the security of the packages.
+`createSlopConfig()` enables every rule as an error. It inspects recent changes by default.
 
-To do so, you need to run `pnpm publish` manually for the very first time to create the package on npm, and then go to `https://www.npmjs.com/package/<your-package-name>/access` to set the connection to your GitHub repo.
+```ts
+import { createSlopConfig } from 'eslint-plugin-slop'
 
-Then for the future releases, you can run `pnpm run release` to do the release and the GitHub Actions will take care of the release process.
+export default [
+  ...createSlopConfig(),
+]
+```
+
+The constructor returns two flat config entries. The universal entry enables `no-em-dash` for every language in the surrounding ESLint config. The JavaScript entry enables the syntax rules for `js`, `mjs`, `cjs`, `jsx`, `ts`, `mts`, `cts`, and `tsx` files.
+
+The consumer supplies parsers and language plugins. Linting Markdown, for example, requires a Markdown language plugin in the same ESLint config.
+
+### Inspection modes
+
+```ts
+createSlopConfig({
+  cwd: import.meta.dirname,
+  inspection: {
+    mode: 'recent-changes',
+    tracebackCommits: 5,
+  },
+})
+```
+
+- `recent-changes` compares the exact linted text with `HEAD~tracebackCommits`. It includes committed, staged, unstaged, untracked, and unsaved changes. The default traceback is five commits.
+- `uncommitted` compares the exact linted text with `HEAD`. It includes staged, unstaged, untracked, and unsaved changes.
+- `full` inspects the complete file.
+
+Recent modes report a construct only when its current range intersects an added or modified line in the net diff. If Git is unavailable, the file sits outside the repository, or the requested history is unavailable, the rules inspect the complete file.
+
+### Rule overrides
+
+Rule overrides use normal flat config entries.
+
+```ts
+createSlopConfig({
+  rules: {
+    'slop/max-comment-length': ['error', { maximumWords: 40 }],
+    'slop/no-trivial-functions': ['error', { minimumReferences: 3 }],
+    'slop/no-em-dash': 'off',
+  },
+})
+```
+
+The default export is the raw ESLint plugin object. It has `meta` and `rules`, with no bundled configs. A raw configuration with no `settings.slop` uses full inspection.
+
+## Rules
+
+| Rule | Reports | Options |
+| --- | --- | --- |
+| [`slop/no-em-dash`](./src/rules/no-em-dash.md) | Each literal U+2014 character in any parser-compatible language | None |
+| [`slop/no-trivial-functions`](./src/rules/no-trivial-functions.md) | Low-use top-level property access or transparent forwarding functions that are not exported through ESM | `minimumReferences`, default `5` |
+| [`slop/max-comment-length`](./src/rules/max-comment-length.md) | Logical comment blocks over a word limit | `maximumWords`, default `50`; `ignoreJSDoc`, default `true` |
+| [`slop/no-trivial-type-aliases`](./src/rules/no-trivial-type-aliases.md) | Top-level TypeScript aliases that resolve through same-file chains to `unknown` or a primitive | None |
+| [`slop/no-chained-type-assertions`](./src/rules/no-chained-type-assertions.md) | Two or more nested TypeScript assertions, except chains made entirely of `as const` | None |
+
+`max-comment-length` groups directly adjacent line comments. A blank line or code separates groups. The first comment block before the first code token is a file header. A shebang may come before it.
+
+`no-trivial-functions` counts external value references. It excludes the declaration, recursive references inside the function, and type-only references. Direct and later ESM exports remain allowed.
+
+## Credits
+
+The rule selection and package organization draw from these projects.
+
+- [dmmulroy/anti-slop](https://github.com/dmmulroy/anti-slop) cataloged recurring low-value patterns.
+- [Coderrob/eslint-config-zero-tolerance](https://github.com/Coderrob/eslint-config-zero-tolerance) showed the value of a small strict rule set.
+
+The rule implementations here are original and follow the narrower behavior documented above.
 
 ## Sponsors
 
@@ -26,7 +91,7 @@ Then for the future releases, you can run `pnpm run release` to do the release a
 
 ## License
 
-[MIT](./LICENSE) License © [Anthony Fu](https://github.com/antfu)
+[MIT](./LICENSE.md) License © [Anthony Fu](https://github.com/antfu)
 
 <!-- Badges -->
 
@@ -37,6 +102,6 @@ Then for the future releases, you can run `pnpm run release` to do the release a
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/eslint-plugin-slop?style=flat&colorA=080f12&colorB=1fa669&label=minzip
 [bundle-href]: https://bundlephobia.com/result?p=eslint-plugin-slop
 [license-src]: https://img.shields.io/github/license/antfu/eslint-plugin-slop.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/antfu/eslint-plugin-slop/blob/main/LICENSE
+[license-href]: https://github.com/antfu/eslint-plugin-slop/blob/main/LICENSE.md
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
 [jsdocs-href]: https://www.jsdocs.io/package/eslint-plugin-slop

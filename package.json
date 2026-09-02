@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@11.15.1",
-  "description": "ESLint plugin for catching potential AI slops and force the feedback loop",
+  "description": "ESLint rules that flag low-value code and prose patterns.",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
   "funding": "https://github.com/sponsors/antfu",
@@ -13,7 +13,13 @@
     "url": "git+https://github.com/antfu/eslint-plugin-slop.git"
   },
   "bugs": "https://github.com/antfu/eslint-plugin-slop/issues",
-  "keywords": [],
+  "keywords": [
+    "ai",
+    "eslint",
+    "eslintplugin",
+    "lint",
+    "slop"
+  ],
   "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs",
@@ -29,7 +35,6 @@
     "lint": "eslint",
     "prepack": "nr build",
     "release": "bumpp",
-    "start": "tsx src/index.ts",
     "test": "pnpm run build && vitest",
     "typecheck": "tsc",
     "prepare": "git config core.hooksPath .githooks && simple-git-hooks && skills-npm"
@@ -40,18 +45,26 @@
     "lint": "Check for code style issues",
     "prepack": "Build before publishing",
     "release": "Bump version and publish a release",
-    "start": "Run the entry file",
     "test": "Run the test suite",
     "typecheck": "Check types",
     "prepare": "Set up git hooks and skills"
   },
+  "peerDependencies": {
+    "eslint": "^10.0.0"
+  },
+  "dependencies": {
+    "diff": "catalog:deps"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",
     "@antfu/ni": "catalog:cli",
-    "@antfu/utils": "catalog:inlined",
+    "@eslint/markdown": "catalog:testing",
     "@types/node": "catalog:types",
+    "@typescript-eslint/parser": "catalog:testing",
+    "@typescript-eslint/utils": "catalog:cli",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
+    "jiti": "catalog:cli",
     "nano-staged": "catalog:cli",
     "publint": "catalog:cli",
     "simple-git-hooks": "catalog:cli",
@@ -59,9 +72,7 @@
     "tsdown": "catalog:cli",
     "tsdown-stale-guard": "catalog:testing",
     "tsnapi": "catalog:testing",
-    "tsx": "catalog:cli",
     "typescript": "catalog:cli",
-    "vite": "catalog:cli",
     "vitest": "catalog:testing"
   },
   "simple-git-hooks": {
