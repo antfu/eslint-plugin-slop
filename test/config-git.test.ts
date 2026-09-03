@@ -89,7 +89,7 @@ describe('createSlopConfig', () => {
     const [universal] = createSlopConfig({ cwd: '/workspace', inspection: 'full' })
 
     expect(universal.settings).toEqual({
-      slop: { cwd: '/workspace', inspection: { mode: 'full' } },
+      slop: { cwd: resolve('/workspace'), inspection: { mode: 'full' } },
     })
   })
 
