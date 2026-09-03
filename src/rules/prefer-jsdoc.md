@@ -10,9 +10,10 @@ The rule fires on a `//` comment directly above:
 
 - an exported declaration (`export function`, `export const`, `export default`, and so on)
 - an interface or type-literal member
-- an object literal property
 - a class member
 - an enum member
+
+Object literal properties are left alone: their values aren't hovered as documented API surface.
 
 A blank line between the comment and the target does not break the association; code or a block comment does. The fix converts the `//` run into a JSDoc block and closes any blank-line gap. A single `//` line becomes a one-liner (`/** does X */`); a run of lines becomes a multi-line block.
 
