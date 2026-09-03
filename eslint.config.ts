@@ -18,6 +18,7 @@ export default antfu(
       'slop/no-chained-type-assertions': 'off',
       'slop/no-trivial-functions': 'off',
       'slop/no-jargon': 'off',
+      'slop/no-static-only-class': 'off',
       'slop/prefer-jsdoc': 'off',
     },
   },

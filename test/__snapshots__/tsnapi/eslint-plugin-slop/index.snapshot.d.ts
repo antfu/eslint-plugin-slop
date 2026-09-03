@@ -29,7 +29,7 @@ export type SlopInspection = {
 export type SlopInspectionMode = 'full' | 'uncommitted' | 'recent-changes';
 export type SlopInspectionOption = SlopInspectionMode | SlopInspection;
 export type SlopRuleId = `slop/${SlopRuleName}`;
-export type SlopRuleName = 'max-comment-length' | 'no-chained-type-assertions' | 'no-em-dash' | 'no-jargon' | 'no-trivial-functions' | 'no-trivial-type-aliases' | 'prefer-jsdoc';
+export type SlopRuleName = 'max-comment-length' | 'no-chained-type-assertions' | 'no-em-dash' | 'no-jargon' | 'no-static-only-class' | 'no-trivial-functions' | 'no-trivial-type-aliases' | 'prefer-jsdoc';
 // #endregion
 
 // #region Functions
@@ -43,6 +43,7 @@ export declare const rules: {
   'no-chained-type-assertions': import("eslint").Rule.RuleModule;
   'no-em-dash': import("eslint").Rule.RuleModule;
   'no-jargon': import("eslint").Rule.RuleModule;
+  'no-static-only-class': import("eslint").Rule.RuleModule;
   'no-trivial-functions': import("eslint").Rule.RuleModule;
   'no-trivial-type-aliases': import("eslint").Rule.RuleModule;
   'prefer-jsdoc': import("eslint").Rule.RuleModule;

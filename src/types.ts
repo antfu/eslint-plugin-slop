@@ -21,6 +21,7 @@ export type SlopRuleName
     | 'no-chained-type-assertions'
     | 'no-em-dash'
     | 'no-jargon'
+    | 'no-static-only-class'
     | 'no-trivial-functions'
     | 'no-trivial-type-aliases'
     | 'prefer-jsdoc'
