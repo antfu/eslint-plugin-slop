@@ -55,7 +55,8 @@ describe('prefer-jsdoc', () => {
     expect(lint('prefer-jsdoc', '// module overview\n\nexport const a = 1')).toHaveLength(0)
   })
 
-  it('ignores destructuring properties and non-exported declarations', () => {
+  it('ignores object literal properties, destructuring, and non-exported declarations', () => {
+    expect(lint('prefer-jsdoc', 'const obj = {\n  // note\n  a: 1,\n}')).toHaveLength(0)
     expect(lint('prefer-jsdoc', '// note\nconst { a } = obj')).toHaveLength(0)
     expect(lint('prefer-jsdoc', '// note\nconst a = 1')).toHaveLength(0)
   })

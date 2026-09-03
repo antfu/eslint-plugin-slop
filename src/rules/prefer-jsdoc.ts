@@ -106,10 +106,6 @@ export const preferJsdoc = defineRule({
           check(node)
       },
       ExportDefaultDeclaration: check,
-      Property(node) {
-        if (node.parent.type !== 'ObjectPattern')
-          check(node)
-      },
       PropertyDefinition: check,
       MethodDefinition: check,
       TSPropertySignature: check,
