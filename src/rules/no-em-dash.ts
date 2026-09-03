@@ -1,6 +1,8 @@
 import { isReportEligible } from '../utils/git-inspection'
 import { defineRule } from '../utils/rule'
 
+const SENTENCE_TERMINATORS = new Set(['.', '!', '?'])
+
 function getPosition(text: string, index: number): { column: number, line: number } {
   const before = text.slice(0, index)
   const lastNewline = before.lastIndexOf('\n')
@@ -8,6 +10,33 @@ function getPosition(text: string, index: number): { column: number, line: numbe
     column: index - lastNewline - 1,
     line: before.split('\n').length,
   }
+}
+
+function getSentenceRange(text: string, index: number): { end: number, start: number } {
+  let start = index
+  while (start > 0) {
+    const char = text[start - 1]
+    if (char === '\n' || SENTENCE_TERMINATORS.has(char))
+      break
+    start -= 1
+  }
+
+  let end = index + 1
+  while (end < text.length) {
+    const char = text[end]
+    if (char === '\n')
+      break
+    end += 1
+    if (SENTENCE_TERMINATORS.has(char))
+      break
+  }
+
+  while (start < index && /\s/.test(text[start]))
+    start += 1
+  while (end > index + 1 && /\s/.test(text[end - 1]))
+    end -= 1
+
+  return { end, start }
 }
 
 export const noEmDash = defineRule({
@@ -31,9 +60,15 @@ export const noEmDash = defineRule({
       inspected = true
 
       const text = context.sourceCode.text
+      const reported = new Set<number>()
       for (let index = text.indexOf('\u2014'); index !== -1; index = text.indexOf('\u2014', index + 1)) {
-        const start = getPosition(text, index)
-        const end = { column: start.column + 1, line: start.line }
+        const sentence = getSentenceRange(text, index)
+        if (reported.has(sentence.start))
+          continue
+        reported.add(sentence.start)
+
+        const start = getPosition(text, sentence.start)
+        const end = getPosition(text, sentence.end)
         if (!isReportEligible(context, { startLine: start.line, endLine: end.line }))
           continue
 

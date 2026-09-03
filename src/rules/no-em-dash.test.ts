@@ -5,7 +5,7 @@ import plugin from '../plugin'
 import { lint } from './test-utils'
 
 describe('no-em-dash', () => {
-  it('reports every literal em dash with its exact location', () => {
+  it('reports the whole surrounding sentence for each em dash', () => {
     const messages = lint('no-em-dash', 'const note = "one \u2014 two"\n// three \u2014 four')
 
     expect(messages).toHaveLength(2)
@@ -14,11 +14,22 @@ describe('no-em-dash', () => {
       endColumn: message.endColumn,
       line: message.line,
     }))).toEqual([
-      { column: 19, endColumn: 20, line: 1 },
-      { column: 10, endColumn: 11, line: 2 },
+      { column: 1, endColumn: 25, line: 1 },
+      { column: 1, endColumn: 16, line: 2 },
     ])
     expect(messages[0].message).toContain('Rephrase this sentence')
     expect(messages[0].fix).toBeUndefined()
+  })
+
+  it('reports one sentence once even with multiple em dashes', () => {
+    const messages = lint('no-em-dash', '// One \u2014 two \u2014 three.')
+
+    expect(messages).toHaveLength(1)
+    expect({
+      column: messages[0].column,
+      endColumn: messages[0].endColumn,
+      line: messages[0].line,
+    }).toEqual({ column: 1, endColumn: 22, line: 1 })
   })
 
   it('allows adjacent dashes, en dashes, and escaped characters', () => {

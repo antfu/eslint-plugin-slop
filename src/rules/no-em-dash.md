@@ -4,7 +4,7 @@ Disallow literal em dashes in source text.
 
 ## Rule details
 
-This rule checks the complete text exposed by the configured ESLint parser or language plugin. It reports each literal U+2014 character, including characters in code, strings, comments, Markdown, and other parser-compatible languages.
+This rule checks the complete text exposed by the configured ESLint parser or language plugin. It reports the whole sentence surrounding each literal U+2014 character (bounded by sentence-ending punctuation or line breaks), so the fix is to rephrase the sentence rather than swap the dash. This applies to code, strings, comments, Markdown, and other parser-compatible languages.
 
 Escaped text such as `\u2014`, adjacent hyphens (`--`), and en dashes (`–`) are allowed. The rule has no autofix because rewriting prose needs author judgment.
 
@@ -19,4 +19,4 @@ const summary = 'The input parses, but it still needs validation'
 const summary = 'The input parses. It still needs validation.'
 ```
 
-The diagnostic asks the author to shorten or rephrase the sentence instead of replacing punctuation mechanically.
+The diagnostic highlights the full sentence and asks the author to shorten or rephrase it instead of replacing punctuation mechanically. Multiple em dashes within one sentence produce a single report.
