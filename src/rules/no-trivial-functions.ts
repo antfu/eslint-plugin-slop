@@ -227,6 +227,7 @@ export const noTrivialFunctions = defineRule({
   meta: {
     type: 'suggestion',
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/no-trivial-functions.md',
       description: 'Disallow low-use top-level forwarding and property-access functions.',
     },
     languages: ['js/js'],

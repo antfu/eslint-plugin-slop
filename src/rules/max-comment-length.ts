@@ -69,6 +69,7 @@ export const maxCommentLength = defineRule({
   meta: {
     type: 'suggestion',
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/max-comment-length.md',
       description: 'Limit comments by word count.',
     },
     languages: ['js/js'],

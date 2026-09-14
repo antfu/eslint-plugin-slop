@@ -43,6 +43,7 @@ export const noChainedTypeAssertions = defineRule({
   meta: {
     type: 'suggestion',
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/no-chained-type-assertions.md',
       description: 'Disallow chains of TypeScript type assertions.',
     },
     languages: ['js/js'],

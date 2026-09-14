@@ -94,6 +94,7 @@ export const noJargon = defineRule({
     type: 'suggestion',
     hasSuggestions: true,
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/no-jargon.md',
       description: 'Disallow inflated vocabulary in comments.',
     },
     languages: ['js/js'],

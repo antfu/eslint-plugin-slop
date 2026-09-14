@@ -47,6 +47,7 @@ export const preferJsdoc = defineRule({
     type: 'suggestion',
     fixable: 'code',
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/prefer-jsdoc.md',
       description: 'Require /** */ rather than // for the comment documenting an export or member.',
     },
     languages: ['js/js'],
