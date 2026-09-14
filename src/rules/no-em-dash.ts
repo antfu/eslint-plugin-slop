@@ -43,6 +43,7 @@ export const noEmDash = defineRule({
   meta: {
     type: 'suggestion',
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/no-em-dash.md',
       description: 'Disallow em dashes in source text.',
     },
     languages: ['*'],

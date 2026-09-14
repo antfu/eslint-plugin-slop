@@ -58,6 +58,7 @@ export const noTrivialTypeAliases = defineRule({
   meta: {
     type: 'suggestion',
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/no-trivial-type-aliases.md',
       description: 'Disallow type aliases that resolve only to a primitive or unknown.',
     },
     languages: ['js/js'],

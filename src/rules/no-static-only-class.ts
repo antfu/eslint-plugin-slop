@@ -72,6 +72,7 @@ export const noStaticOnlyClass = defineRule({
   meta: {
     type: 'suggestion',
     docs: {
+      url: 'https://github.com/antfu/eslint-plugin-slop/blob/main/src/rules/no-static-only-class.md',
       description: 'Disallow classes that group only static members.',
     },
     languages: ['js/js'],
